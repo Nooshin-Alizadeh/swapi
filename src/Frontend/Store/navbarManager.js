@@ -5,7 +5,7 @@ export const navbarManager = createSlice({
   initialState: {},
   reducers: {
     navbarSearch(state1, action) {
-      debugger;
+      
       state1.navbarSearch = action.payload;
     },
   },

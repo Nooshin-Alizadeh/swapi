@@ -35,7 +35,7 @@ class DataService {
         Accept: "application/json",
       },
     }).then((md) => {
-      debugger;
+      
 
       this.dispatch(
         loadingAction.isLoading({ valueState: false, id: this.id })

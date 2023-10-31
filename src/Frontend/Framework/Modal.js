@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 import { createPortal } from "react-dom";
 
 const ModalBase = (props) => {
-  debugger;
+  
   let modalConfig = {
     hasHeader: true,
     hasBody: true,

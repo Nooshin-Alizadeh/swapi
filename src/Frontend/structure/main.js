@@ -16,7 +16,7 @@ import ModalBase from "../Framework/Modal";
 const Main = () => {
   const stateId = Framework.generate_uuidv4();
   //const value=useSelector((state)=>{
-  debugger;
+  
   const value = useSelector((state) => {
     return state;
   });
@@ -41,7 +41,7 @@ const Main = () => {
     //setSelectedTab(reciever);
   };
   const onNavbarSearch = (reciever, asdf) => {
-    debugger;
+    
     //dispatch({ type: "NavbarSearch", searchValue: asdf });
     try {
       dispatch(navbarAction(asdf));

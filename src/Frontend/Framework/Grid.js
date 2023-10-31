@@ -40,7 +40,7 @@ const Grid = (props) => {
     dataService
       .Get(props.config?.url, { page: pageNum })
       .then((result) => {
-        debugger;
+        
 
         var pages = setPagination(result.count);
         //paginationItem = result.count;
@@ -50,7 +50,7 @@ const Grid = (props) => {
         });
       })
       .catch((er) => {
-        debugger;
+        
         //'Failed to fetch'
         dispatch(_loadingAction({ valueState: false, id: loadingId }));
       });

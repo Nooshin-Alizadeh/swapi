@@ -5,7 +5,7 @@ export const loadingManager = createSlice({
   initialState: { loadin: {} },
   reducers: {
     isLoading(state, action) {
-      debugger;
+      
       if (action.payload.valueState == false) {
         delete state.loadin[action.payload.id];
       } else {

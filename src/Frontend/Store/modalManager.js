@@ -5,7 +5,7 @@ export const modalManager = createSlice({
   initialState: { config: null },
   reducers: {
     modalConfig(state, action) {
-      debugger;
+      
       if (action.payload.valueState == false) {
         delete state.loadin[action.payload.id];
       } else {
