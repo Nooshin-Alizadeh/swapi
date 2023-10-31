@@ -5,8 +5,10 @@ import DataService from "../Framework/DataService";
 import { Fragment, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Pagination } from "react-bootstrap";
+import { loadingAction } from "../Store/loadingManager";
 const Grid = (props) => {
   const dispatch = useDispatch();
+  const _loadingAction = loadingAction;
   let dataService;
   const generateField = (rowData, field, type) => {
     switch (type) {
@@ -14,6 +16,10 @@ const Grid = (props) => {
         return new Date(rowData[field]).toDateString();
         break;
       case "firstradio":
+        return (
+          <Form.Check type="radio" aria-label="radio 1" name="rowSelected" />
+        );
+      case "firstSelect":
         return (
           <Form.Check type="radio" aria-label="radio 1" name="rowSelected" />
         );
@@ -26,20 +32,65 @@ const Grid = (props) => {
         break;
     }
   };
-  const [pageData, setData] = useState({gridData:[] , pagination:[]});
+  const [pageData, setData] = useState({ gridData: [], pagination: [] });
   const [generate, setGenerate] = useState(true);
   const columnsValue = props.config.columns;
   console.info(generate);
+  const getGridData = (pageNum, loadingId) => {
+    dataService
+      .Get(props.config?.url, { page: pageNum })
+      .then((result) => {
+        debugger;
 
+        var pages = setPagination(result.count);
+        //paginationItem = result.count;
+        setData({
+          gridData: result.results,
+          pagination: pages,
+        });
+      })
+      .catch((er) => {
+        debugger;
+        //'Failed to fetch'
+        dispatch(_loadingAction({ valueState: false, id: loadingId }));
+      });
+  };
+  const setPagination = (totalCount, pageNum) => {
+    let pagination = [];
+    const pagesCount = totalCount / 10;
+    // const remain = totalCount % 10;
+    for (let i = 0; i < pagesCount; i++) {
+      const index = i + 1;
+      pagination.push(
+        <Pagination.Item
+          key={index}
+          active={index === pageNum}
+          onClick={() => {
+            getGridData(index);
+          }}
+        >
+          {index}
+        </Pagination.Item>
+      );
+      // const element = array[index];
+    }
+    return pagination;
+  };
   if (generate) {
     setGenerate(false);
     if (!props.config?.data && !props.config?.url) return <>data not exist</>;
     if (props.config?.url) {
       const loadingId = Framework.generate_uuidv4();
       dataService = new DataService(dispatch, loadingId);
-      getGridData(1);
+      getGridData(1, loadingId);
     } else if (props.config?.data) {
       setGenerate(false);
+      var pages = setPagination(props.config?.data.length);
+      //paginationItem = result.count;
+      setData({
+        gridData: props.config?.data,
+        pagination: pages,
+      });
 
       setData(props.config.data);
     }
@@ -56,6 +107,22 @@ const Grid = (props) => {
                   type="radio"
                   aria-label="radio 1"
                   name="rowSelected"
+                  onChange={(row) => {
+                    var modal = prop.onClick(d, row);
+                  }}
+                />
+              </td>
+            );
+          if (prop.type == "firstSelect")
+            return (
+              <td key={Framework.generate_uuidv4()}>
+                <Form.Check
+                  type="radio"
+                  aria-label="radio 1"
+                  name="rowSelected"
+                  onChange={(row) => {
+                    var modal = prop.onClick(d, row);
+                  }}
                 />
               </td>
             );
@@ -74,73 +141,21 @@ const Grid = (props) => {
     );
   });
   return (
-    <Fragment>
-      <Table striped bordered hover responsive size="sm">
+    <div className="table-responsive table-responsive table-responsive-xxl">
+      <Table striped bordered hover responsive="xl" size="sm">
         <thead>
           <tr>
             {props.config.columns.map((prop) => {
-              return (
-                <th key={Framework.generate_uuidv4()} className="col-md-2">
-                  {prop.title}
-                </th>
-              );
+              return <th key={Framework.generate_uuidv4()}>{prop.title}</th>;
             })}
           </tr>
         </thead>
         <tbody>{grid}</tbody>
       </Table>
       <div className="d-flex flex-row-reverse bd-highlight">
-      <Pagination size="sm">{pageData.pagination}</Pagination>
+        <Pagination size="sm">{pageData.pagination}</Pagination>
       </div>
-    </Fragment>
+    </div>
   );
-
-  function getGridData(pageNum) {
-
-    dataService
-      .Get(props.config?.url, { page: pageNum })
-      .then((result) => {
-        var pages =setPagination(result.count);
-        //paginationItem = result.count;
-        setData({
-          gridData:result.results,
-          pagination:pages
-        });
-      })
-      .catch((er) => {
-        //dispatch({type:"isLoading",valueState:false,id:loadingId});
-      });
-
-    function setPagination(totalCount) {
-
-      let pagination = [];
-      const pagesCount = totalCount / 10;
-      // const remain = totalCount % 10;
-      for (let i = 0; i < pagesCount; i++) {
-        const index = i + 1;
-        pagination.push(
-          <Pagination.Item
-            key={index}
-            active={index === pageNum}
-            onClick={()=>{getGridData(index)}}
-          >
-            {index}
-          </Pagination.Item>
-        );
-        // const element = array[index];
-      }
-      return pagination;
-      // if (remain != 0) {
-      //   paginationItem.push(
-      //     <Pagination.Item
-      //       key={pagesCount.length}
-      //       active={pagesCount.length === pageNum}
-      //     >
-      //       {pagesCount.length}
-      //     </Pagination.Item>
-      //   );
-      // }
-    }
-  }
 };
 export default Grid;

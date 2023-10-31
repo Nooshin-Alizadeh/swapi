@@ -1,3 +1,5 @@
+// import { loadingAction } from "../Store";
+import { loadingAction } from "../Store/loadingManager";
 import environment from "./../../environment/environment";
 import Framework from "./Framework";
 class DataService {
@@ -6,7 +8,9 @@ class DataService {
     this.id = id;
   }
   async Get(url, params) {
-    this.dispatch({ type: "isLoading", valueState: true, id: this.id });
+    // this.dispatch({ type: "isLoading", valueState: true, id: this.id });
+    var test = loadingAction;
+    this.dispatch(test.isLoading({ valueState: true, id: this.id }));
     // const response = await fetch(url, {
     //   headers: {
     //     Accept: "application/json",
@@ -23,24 +27,31 @@ class DataService {
       });
       urlValue += keyVAlus.join("&");
     }
+    return this.GetMethodIndependent(urlValue);
+  }
+  GetMethodIndependent(urlValue) {
     return fetch(urlValue, {
       headers: {
         Accept: "application/json",
       },
     }).then((md) => {
-      this.dispatch({ type: "isLoading", valueState: false, id: this.id });
+      debugger;
 
-      
+      this.dispatch(
+        loadingAction.isLoading({ valueState: false, id: this.id })
+      );
+
+      // this.dispatch({ type: "isLoading", valueState: false, id: this.id });
       if (!md.ok) {
         throw new Error("error");
       }
       // const myBlob = md.blob();
       // return myBlob;
-      
       // await md.json();
       return md.json();
     });
   }
+
   async Get2(url) {
     this.dispatch({ type: "isLoading", valueState: true, id: this.id });
     // const response = await fetch(url, {
@@ -48,7 +59,7 @@ class DataService {
     //     Accept: "application/json",
     //   },
     // });
-    
+
     // return response.json();
 
     return fetch(`${environment.baseUrl}${url}`, {
@@ -56,15 +67,15 @@ class DataService {
         Accept: "application/json",
       },
     }).then((md) => {
+      // loadingAction.isLoading({  valueState: false, id: this.id })
       this.dispatch({ type: "isLoading", valueState: false, id: this.id });
 
-      
       if (!md.ok) {
         throw new Error("error");
       }
       // const myBlob = md.blob();
       // return myBlob;
-      
+
       // await md.json();
       return md.json();
     });
