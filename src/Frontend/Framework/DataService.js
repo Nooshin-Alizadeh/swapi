@@ -1,16 +1,20 @@
 // import { loadingAction } from "../Store";
 import { loadingAction } from "../Store/loadingManager";
 import environment from "./../../environment/environment";
-import Framework from "./Framework";
+import axios from "axios";
 class DataService {
   constructor(dispatch, id) {
     this.dispatch = dispatch;
     this.id = id;
   }
+  async GetMulti(urls) {
+    const requests = urls.map((s) => axios.get(s));
+    this.dispatch(loadingAction.isLoading({ valueState: true, id: this.id }));
+    return Promise.all(requests);
+  }
   async Get(url, params) {
     // this.dispatch({ type: "isLoading", valueState: true, id: this.id });
-    var test = loadingAction;
-    this.dispatch(test.isLoading({ valueState: true, id: this.id }));
+    this.dispatch(loadingAction.isLoading({ valueState: true, id: this.id }));
     // const response = await fetch(url, {
     //   headers: {
     //     Accept: "application/json",
@@ -35,8 +39,6 @@ class DataService {
         Accept: "application/json",
       },
     }).then((md) => {
-      
-
       this.dispatch(
         loadingAction.isLoading({ valueState: false, id: this.id })
       );
@@ -103,11 +105,6 @@ class DataService {
             pre[prop] = resultData;
             return pre;
           });
-
-        // this.manageIds[lodingId] = false;
-        // this.loading(lodingId, this.manageIds.get(lodingId));
-
-        // this.alert("Data Update Succesfully");
       })
       .catch((cd) => {
         // this.alert("Data Update Succesfully", AlertType.danger);

@@ -10,7 +10,7 @@ const Grid = (props) => {
   const dispatch = useDispatch();
   const _loadingAction = loadingAction;
   let dataService;
-  const generateField = (rowData, field, type) => {
+  const generateField = (rowData, field, type, templpate) => {
     switch (type) {
       case Date.name:
         return new Date(rowData[field]).toDateString();
@@ -28,6 +28,9 @@ const Grid = (props) => {
         return <td key={Framework.generate_uuidv4()}>...</td>;
         break;
       default:
+        if (templpate) {
+          return templpate(rowData);
+        }
         return rowData[field];
         break;
     }
@@ -37,23 +40,29 @@ const Grid = (props) => {
   const columnsValue = props.config.columns;
   console.info(generate);
   const getGridData = (pageNum, loadingId) => {
-    dataService
-      .Get(props.config?.url, { page: pageNum })
-      .then((result) => {
-        
-
-        var pages = setPagination(result.count);
-        //paginationItem = result.count;
-        setData({
-          gridData: result.results,
-          pagination: pages,
+    if (props.config?.url) {
+      dataService
+        .Get(props.config?.url, { page: pageNum })
+        .then((result) => {
+          var pages = setPagination(result.count);
+          //paginationItem = result.count;
+          setData({
+            gridData: result.results,
+            pagination: pages,
+          });
+        })
+        .catch((er) => {
+          //'Failed to fetch'
+          dispatch(_loadingAction({ valueState: false, id: loadingId }));
         });
-      })
-      .catch((er) => {
-        
-        //'Failed to fetch'
-        dispatch(_loadingAction({ valueState: false, id: loadingId }));
+    } else if (props.config.data) {
+      setData((pre) => {
+        return {
+          ...pre,
+          gridData: props.config.data.slice((pageNum - 1) * 10, pageNum * 10),
+        };
       });
+    }
   };
   const setPagination = (totalCount, pageNum) => {
     let pagination = [];
@@ -92,7 +101,7 @@ const Grid = (props) => {
         pagination: pages,
       });
 
-      setData(props.config.data);
+      //setData(props.config.data);
     }
   }
 
@@ -108,7 +117,7 @@ const Grid = (props) => {
                   aria-label="radio 1"
                   name="rowSelected"
                   onChange={(row) => {
-                    var modal = prop.onClick(d, row);
+                    prop.onClick(d, row);
                   }}
                 />
               </td>
@@ -121,7 +130,7 @@ const Grid = (props) => {
                   aria-label="radio 1"
                   name="rowSelected"
                   onChange={(row) => {
-                    var modal = prop.onClick(d, row);
+                    prop.onClick(d, row);
                   }}
                 />
               </td>
@@ -130,7 +139,7 @@ const Grid = (props) => {
             return <td key={Framework.generate_uuidv4()}>...</td>;
           const datacolumn = (
             <td key={Framework.generate_uuidv4()}>
-              {generateField(d, prop.field, prop.type)}
+              {generateField(d, prop.field, prop.type, prop.template)}
               {/* {d[prop.field]} */}
             </td>
           );

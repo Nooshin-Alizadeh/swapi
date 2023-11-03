@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavigationBar from "./navigationBar";
 import Framework from "../Framework/Framework";
 import { ThemeProvider } from "react-bootstrap";
@@ -8,15 +8,14 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import People from "../Swapi/Pages/People/People";
 import Films from "../Swapi/Pages/Films/Films";
 import Species from "../Swapi/Pages/Species/Species";
-import AnyPage from "../Swapi/Pages/Blank/AnyPage";
 import Loading from "../Framework/Loading";
-import { storeAction } from "../Store";
 import { navbarAction } from "../Store/navbarManager";
 import ModalBase from "../Framework/Modal";
+import { modalAction } from "../Store/modalManager";
 const Main = () => {
   const stateId = Framework.generate_uuidv4();
   //const value=useSelector((state)=>{
-  
+
   const value = useSelector((state) => {
     return state;
   });
@@ -41,14 +40,17 @@ const Main = () => {
     //setSelectedTab(reciever);
   };
   const onNavbarSearch = (reciever, asdf) => {
-    
     //dispatch({ type: "NavbarSearch", searchValue: asdf });
     try {
-      dispatch(navbarAction(asdf));
+      dispatch(navbarAction.navbarSearch(asdf));
     } catch (error) {
-      dispatch(navbarAction(asdf));
+      dispatch(navbarAction.navbarSearch(asdf));
     }
   };
+  const setModalShow = () => {
+    dispatch(modalAction.modalConfig({ config: null }));
+  };
+
   return (
     <div className="container-fluid">
       {haveLoading && <Loading></Loading>}
@@ -66,7 +68,7 @@ const Main = () => {
             <hr />
 
             <Routes>
-              <Route exact path="/" component={AnyPage} element={<AnyPage />} />
+              <Route exact path="/" component={People} element={<People />} />
               <Route path="/people" component={People} element={<People />} />
               <Route path="/films" component={Films} element={<Films />} />
               <Route
@@ -84,7 +86,11 @@ const Main = () => {
         </ContextManager.Provider> */}
       </ThemeProvider>
       {value?.modal?.config && (
-        <ModalBase config={value?.modal?.config}></ModalBase>
+        <ModalBase
+          show={true}
+          onHide={() => setModalShow(false)}
+          config={value?.modal?.config}
+        ></ModalBase>
       )}
     </div>
   );

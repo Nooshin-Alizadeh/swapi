@@ -9,5 +9,10 @@ class Framework {
       }
     );
   }
+  static getStringOfDate(edited) {
+    return (
+      edited.getFullYear() + "-" + edited.getMonth() + "-" + edited.getDate()
+    );
+  }
 }
 export default Framework;
