@@ -4,10 +4,14 @@ import Grid from "../../../Framework/Grid";
 import { useDispatch } from "react-redux";
 import { modalAction } from "../../../Store/modalManager";
 import PeopleDetail from "./PeopleDetail";
+import { Dropdown } from "react-bootstrap";
+import DataService from "../../../Framework/DataService";
+import DetailGenerate from "../DetailGenerate";
 //import ContextManager from "../../../contextManager/loading-context-manager";
 
 const People = () => {
   const dispatch = useDispatch();
+  const dataService = new DataService(dispatch, "peoplePage");
   //const ctxData = useContext(ContextManager);
   const gridconfig = {
     columns: [
@@ -33,7 +37,70 @@ const People = () => {
           // );
         },
       },
-      { title: "#", type: "firstaction" },
+      {
+        title: "#",
+        type: "",
+        template: (row) => {
+          return (
+            <>
+              <Dropdown>
+                <Dropdown.Toggle
+                  variant="secondary"
+                  size="sm"
+                  id="dropdown-basic"
+                >
+                  ...
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    onClick={(x, y, z) => {
+                      //homeworld
+                      dataService
+                        .GetMethodIndependent(row.homeworld)
+                        .then((detailObject) => {
+                          // debugger;
+                          dispatch(
+                            modalAction.modalConfig({
+                              config: {
+                                title: detailObject.name,
+                                body: DetailGenerate,
+                                bodyDetail: { ...row, detailObject },
+                              },
+                            })
+                          );
+                        });
+                    }}
+                  >
+                    Homeworld
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={(x, y, z) => {
+                      //homeworld
+                      dataService
+                        .GetMethodIndependent(row.url)
+                        .then((detailObject) => {
+                          // debugger;
+                          dispatch(
+                            modalAction.modalConfig({
+                              config: {
+                                title: detailObject.name,
+                                body: DetailGenerate,
+                                bodyDetail: { ...row, detailObject },
+                              },
+                            })
+                          );
+                        });
+                    }}
+                  >
+                    Full Detail
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </>
+          );
+        },
+      },
       {
         field: "name",
         title: "name",
