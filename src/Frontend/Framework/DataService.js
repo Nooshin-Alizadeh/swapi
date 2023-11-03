@@ -125,7 +125,7 @@ class DataService {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Headers": "Content-Type",
-          "Access-Control-Allow-Headers": "Authorization",
+          //"Access-Control-Allow-Headers": "Authorization",
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         //redirect: "follow", // manual, *follow, error

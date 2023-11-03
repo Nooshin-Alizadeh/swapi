@@ -1,9 +1,9 @@
+/* eslint-disable eqeqeq */
 //import { useContext } from "react";
-import { Form } from "react-bootstrap";
 import Grid from "../../../Framework/Grid";
-import ModalBase from "../../../Framework/Modal";
 import { useDispatch } from "react-redux";
 import { modalAction } from "../../../Store/modalManager";
+import PeopleDetail from "./PeopleDetail";
 //import ContextManager from "../../../contextManager/loading-context-manager";
 
 const People = () => {
@@ -15,45 +15,22 @@ const People = () => {
         title: "#",
         type: "firstradio",
         onClick: (data, column) => {
-          const detailBody = (
-            <Form>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <div className="container-fluid">
-                  <div className="row">
-                    <div className="col-md-6">
-                      <Form.Label>Email address</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="name@example.com"
-                        size="sm"
-                      />
-                    </div>
-                    <div className="col-md-6 ml-auto">
-                      <Form.Label>Email address</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="name@example.com"
-                        size="sm"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </Form.Group>
-            </Form>
-          );
           dispatch(
-            modalAction({ config: { title: data.name, body: detailBody } })
+            modalAction.modalConfig({
+              config: {
+                title: data.name,
+                body: PeopleDetail,
+                bodyDetail: data,
+              },
+            })
           );
-          ModalBase({ config: { title: data.name, body: detailBody } });
+          //ModalBase({ config: { title: data.name, body: detailBody } });
 
-          return (
-            <ModalBase
-              config={{ title: data.name, body: detailBody }}
-            ></ModalBase>
-          );
+          // return (
+          //   <ModalBase
+          //     config={{ title: data.name, body: PeopleDetail }}
+          //   ></ModalBase>
+          // );
         },
       },
       { title: "#", type: "firstaction" },
@@ -80,6 +57,16 @@ const People = () => {
       {
         field: "gender",
         title: "Gender",
+        template: (row) => {
+          if (row.gender == "female") {
+            return <i className="bi bi-gender-female"></i>;
+          } else if (row.gender == "male") {
+            return <i className="bi bi-gender-male"></i>;
+          } else {
+            //bi bi-gender-ambiguous
+            return <i className="bi bi-gender-ambiguous"></i>;
+          }
+        },
       },
       {
         field: "birth_year",

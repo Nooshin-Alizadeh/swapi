@@ -2,7 +2,7 @@
 import Grid from "../../../Framework/Grid";
 // import ContextManager from "../../../contextManager/loading-context-manager";
 
-const Species = (props) => {
+const Starships = (props) => {
   // const ctxData = useContext(ContextManager);
   const gridconfig = {
     columns: [
@@ -12,21 +12,21 @@ const Species = (props) => {
         title: "Name",
       },
       {
-        field: "average_lifespan",
-        title: "Average Lifespan",
+        field: "model",
+        title: "Model",
       },
       {
-        field: "classification",
-        title: "Classification",
+        field: "manufacturer",
+        title: "Manufacturer",
       },
       {
-        field: "language",
-        title: "Language",
+        field: "crew",
+        title: "Crew",
       },
     ],
     data: props.gridDataValue,
-    url: props.gridDataValue ? null : "species",
+    url: props.gridDataValue ? null : "starships",
   };
-  return <Grid config={gridconfig} key={"Species"}></Grid>;
+  return <Grid config={gridconfig} key={"Starships"}></Grid>;
 };
-export default Species;
+export default Starships;

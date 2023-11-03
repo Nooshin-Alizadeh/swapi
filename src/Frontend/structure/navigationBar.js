@@ -3,11 +3,9 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
 const NavigationBar = (props) => {
   let searchValue;
   return (
-    
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container fluid>
         <Navbar.Brand href="#">SWAPI</Navbar.Brand>
@@ -42,6 +40,24 @@ const NavigationBar = (props) => {
             >
               Species
             </Nav.Link>
+
+            <Nav.Link
+              href="/starships"
+              onClick={() => {
+                props.onClick("starships");
+              }}
+            >
+              Starships
+            </Nav.Link>
+
+            <Nav.Link
+              href="/vehicles"
+              onClick={() => {
+                props.onClick("vehicles");
+              }}
+            >
+              Vehicles
+            </Nav.Link>
             {/* <NavDropdown title="Link" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action4">
@@ -63,10 +79,18 @@ const NavigationBar = (props) => {
               className="me-2"
               aria-label="Search"
               value={searchValue}
-              onChange={(data)=>{searchValue=data.target.value;}}
-
+              onChange={(data) => {
+                searchValue = data.target.value;
+              }}
             />
-            <Button variant="outline-success" onClick={(data)=>{props.onSearch(data.target.value,searchValue)}}>Search</Button>
+            <Button
+              variant="outline-success"
+              onClick={(data) => {
+                props.onSearch(data.target.value, searchValue);
+              }}
+            >
+              Search
+            </Button>
           </Form>
         </Navbar.Collapse>
       </Container>

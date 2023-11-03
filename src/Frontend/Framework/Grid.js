@@ -14,7 +14,6 @@ const Grid = (props) => {
     switch (type) {
       case Date.name:
         return new Date(rowData[field]).toDateString();
-        break;
       case "firstradio":
         return (
           <Form.Check type="radio" aria-label="radio 1" name="rowSelected" />
@@ -23,22 +22,18 @@ const Grid = (props) => {
         return (
           <Form.Check type="radio" aria-label="radio 1" name="rowSelected" />
         );
-        break;
       case "firstaction":
         return <td key={Framework.generate_uuidv4()}>...</td>;
-        break;
       default:
         if (templpate) {
           return templpate(rowData);
         }
         return rowData[field];
-        break;
     }
   };
   const [pageData, setData] = useState({ gridData: [], pagination: [] });
   const [generate, setGenerate] = useState(true);
   const columnsValue = props.config.columns;
-  console.info(generate);
   const getGridData = (pageNum, loadingId) => {
     if (props.config?.url) {
       dataService

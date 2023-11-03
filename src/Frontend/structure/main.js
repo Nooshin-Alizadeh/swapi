@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import NavigationBar from "./navigationBar";
-import Framework from "../Framework/Framework";
 import { ThemeProvider } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -12,8 +10,10 @@ import Loading from "../Framework/Loading";
 import { navbarAction } from "../Store/navbarManager";
 import ModalBase from "../Framework/Modal";
 import { modalAction } from "../Store/modalManager";
+import Vehicles from "../Swapi/Pages/Vehicles/vehicles";
+import Starships from "../Swapi/Pages/Starships/Starships";
 const Main = () => {
-  const stateId = Framework.generate_uuidv4();
+  // const stateId = Framework.generate_uuidv4();
   //const value=useSelector((state)=>{
 
   const value = useSelector((state) => {
@@ -28,17 +28,15 @@ const Main = () => {
     }
   }
   const dispatch = useDispatch();
-  //dispatch({type:'b'});
-  // const selectedTavValue=
-  const [selectedTab, setSelectedTab] = useState({
-    id: stateId,
-    value: "people",
-  });
+  // const [selectedTab, setSelectedTab] = useState({
+  //   id: stateId,
+  //   value: "people",
+  // });
 
-  const onNavbarSelect = (reciever) => {
-    // dispatch({type:reciever});
-    //setSelectedTab(reciever);
-  };
+  // const onNavbarSelect = (reciever) => {
+  //   // dispatch({type:reciever});
+  //   //setSelectedTab(reciever);
+  // };
   const onNavbarSearch = (reciever, asdf) => {
     //dispatch({ type: "NavbarSearch", searchValue: asdf });
     try {
@@ -60,13 +58,12 @@ const Main = () => {
       >
         <NavigationBar
           className="container"
-          onClick={onNavbarSelect}
+          // onClick={onNavbarSelect}
           onSearch={onNavbarSearch}
         ></NavigationBar>
         <Router>
           <div>
             <hr />
-
             <Routes>
               <Route exact path="/" component={People} element={<People />} />
               <Route path="/people" component={People} element={<People />} />
@@ -76,14 +73,19 @@ const Main = () => {
                 component={Species}
                 element={<Species />}
               />
+              <Route
+                path="/vehicles"
+                component={Vehicles}
+                element={<Vehicles />}
+              />
+              <Route
+                path="/starships"
+                component={Starships}
+                element={<Starships />}
+              />
             </Routes>
           </div>
         </Router>
-        {/* <ContextManager.Provider value={selectedTab}>
-          <div className="rounded border p-4 container">
-            <Context></Context>
-          </div>
-        </ContextManager.Provider> */}
       </ThemeProvider>
       {value?.modal?.config && (
         <ModalBase

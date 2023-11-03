@@ -2,8 +2,7 @@
 import Grid from "../../../Framework/Grid";
 // import ContextManager from "../../../contextManager/loading-context-manager";
 
-const Films=()=>{
-
+const Films=(props)=>{
     //const ctxData = useContext(ContextManager);
     const gridconfig = {
         columns: [
@@ -25,8 +24,8 @@ const Films=()=>{
             title: "Release Date",
           }
         ],
-        data: null,
-        url: "films"
+        data: props.gridDataValue,
+        url: props.gridDataValue?null:"films"
       };
       return <Grid config={gridconfig} key={"films"}></Grid> ;
 }
