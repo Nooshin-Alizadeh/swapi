@@ -6,9 +6,11 @@ import { Fragment, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Pagination } from "react-bootstrap";
 import { loadingAction } from "../Store/loadingManager";
+import { alertAction } from "../Store/alertManager";
+import { type } from "./Alert";
 const Grid = (props) => {
   const dispatch = useDispatch();
-  const _loadingAction = loadingAction;
+  // const _loadingAction = loadingAction;
   let dataService;
   const generateField = (rowData, field, type, templpate) => {
     switch (type) {
@@ -48,7 +50,26 @@ const Grid = (props) => {
         })
         .catch((er) => {
           //'Failed to fetch'
-          dispatch(_loadingAction({ valueState: false, id: loadingId }));
+          dispatch(
+            loadingAction.isLoading({ valueState: false, id: loadingId })
+          );
+          dispatch(
+            alertAction.alertConfig({
+              config: {
+                time: 20,
+                msg: er.message,
+              },
+            })
+          );
+          dispatch(
+            alertAction.alertConfig({
+              config: {
+                time: 20,
+                msg: "FAIL TO LOAD GRID.",
+                type: type.warning,
+              },
+            })
+          );
         });
     } else if (props.config.data) {
       setData((pre) => {

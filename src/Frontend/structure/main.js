@@ -12,6 +12,9 @@ import ModalBase from "../Framework/Modal";
 import { modalAction } from "../Store/modalManager";
 import Vehicles from "../Swapi/Pages/Vehicles/vehicles";
 import Starships from "../Swapi/Pages/Starships/Starships";
+import AlertMsg from "../Framework/Alert";
+import { alertAction } from "../Store/alertManager";
+import { useEffect } from "react";
 const Main = () => {
   // const stateId = Framework.generate_uuidv4();
   //const value=useSelector((state)=>{
@@ -28,6 +31,22 @@ const Main = () => {
     }
   }
   const dispatch = useDispatch();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (value?.alert?.config) {
+        dispatch(
+          alertAction.alertConfig({
+            config: null,
+          })
+        );
+      }
+    }, 5000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value?.alert?.config]);
   // const [selectedTab, setSelectedTab] = useState({
   //   id: stateId,
   //   value: "people",
@@ -93,6 +112,13 @@ const Main = () => {
           onHide={() => setModalShow(false)}
           config={value?.modal?.config}
         ></ModalBase>
+      )}
+      {value?.alert?.config && (
+        <AlertMsg
+          show={true}
+          onHide={() => setModalShow(false)}
+          config={value?.alert?.config}
+        ></AlertMsg>
       )}
     </div>
   );
